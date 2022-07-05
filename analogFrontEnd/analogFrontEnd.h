@@ -114,3 +114,24 @@
 #define B_PD2_HIGH                      0x7D
 #define B_PD3_HIGH                      0x7E
 #define B_PD4_HIGH                      0x7F
+typedef enum {
+    STANDBY_MODE,
+    PROGRAM_MODE,
+    NORMAL_MODE,
+}analogFrontEnd_device_state;
+
+
+class analogFrontEnd
+{
+private:
+    /* data */
+public:
+    analogFrontEnd();
+    ~analogFrontEnd();
+    bool begin(uint8_t i2c_addr = );
+
+
+
+};
+
+
