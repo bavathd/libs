@@ -138,6 +138,7 @@ protected:
     Adafruit_I2CDevice *i2c_dev = NULL;
     
 private:
+    void writeRegister(byte addr, byte data);
   /* 
   condition
   */
@@ -146,6 +147,11 @@ public:
     ~analogFrontEnd();
     bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &Wire, 
             int32_t Sensor_id = 0);
+    
+    analogFrontEnd_device_state deviceState();
+
+    void powerState(bool power);
+    
 
 
 

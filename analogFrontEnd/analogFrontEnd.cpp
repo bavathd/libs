@@ -32,5 +32,22 @@ bool analogFrontEnd::_init(int32_t sensor_id) {
     return false;
   }
     Serial.println("data read");
+
+    powerState(true);
     return true;
 }
+
+void analogFrontEnd::powerState(bool power){
+    bool _power = power;
+    if(_power == true) {
+        
+        writeRegister(SAMPLE_CLK, 0x12 | 0x0>>6 | 0x01>>7 |0x0>>8 & 0xFF);
+
+    }
+}
+
+void analogFrontEnd::writeRegister(byte addr, byte data) {
+    Adafruit_BusIO_Register reg = Adafruit_BusIO_Register(i2c_dev, addr);
+    reg.write(data);
+}
+
