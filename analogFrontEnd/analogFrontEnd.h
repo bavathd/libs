@@ -135,7 +135,7 @@ class analogFrontEnd
 {
 protected:
     virtual bool _init(int32_t sensor_id);
-    Adafruit_I2CDevice *i2cdev = NULL;
+    Adafruit_I2CDevice *i2c_dev = NULL;
     
 private:
   /* 
@@ -144,8 +144,8 @@ private:
 public:
     analogFrontEnd();
     ~analogFrontEnd();
-    bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &wire, 
-            uint8_t Sensor_id = 0);
+    bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &Wire, 
+            int32_t Sensor_id = 0);
 
 
 
