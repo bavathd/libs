@@ -1,10 +1,13 @@
-#ifndef AnalogFrontEnd_h
-#define AnalogFrontEnd_h
+#ifndef _ANALOGFRONEND_h
+#define _ANALOGFRONEND_h
 
 
 
-#include<Wire.h>
+
 #include"Arduino.h"
+#include <Adafruit_BusIO_Register.h>
+#include<Adafruit_I2CDevice.h>
+#include<Wire.h>
 
 
 
@@ -14,7 +17,7 @@
 #define GPIO_DRV                        0x02
 #define BG_STATUS                       0x04
 #define FIFO_THRESH                     0x06
-#define DEVID                           0x08
+#define MY_NAME_IS                      0x08
 #define I2CS_ID                         0x09
 #define CLK_RATIO                       0x0A
 
@@ -114,24 +117,40 @@
 #define B_PD2_HIGH                      0x7D
 #define B_PD3_HIGH                      0x7E
 #define B_PD4_HIGH                      0x7F
+
+
+
+#define SLAVE_ADDRESS                   0x64
+#define DEV_ID                          0x16
+#define REV_NUM                         0x0A
 typedef enum {
     STANDBY_MODE,
     PROGRAM_MODE,
     NORMAL_MODE,
 }analogFrontEnd_device_state;
 
+class analogFrontEnd;
 
 class analogFrontEnd
 {
+protected:
+    virtual bool _init(int32_t sensor_id);
+    Adafruit_I2CDevice *i2cdev = NULL;
+    
 private:
-    /* data */
+  /* 
+  condition
+  */
 public:
     analogFrontEnd();
     ~analogFrontEnd();
-    bool begin(uint8_t i2c_addr = );
+    bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &wire, 
+            uint8_t Sensor_id = 0);
+
 
 
 
 };
 
 
+#endif
