@@ -149,6 +149,8 @@ public:
             int32_t Sensor_id = 0);
     
     analogFrontEnd_device_state deviceState();
+    uint16_t readRegister(uint8_t addr);
+  
 
     void powerState(bool power);
     

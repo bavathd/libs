@@ -28,26 +28,43 @@ bool analogFrontEnd::begin(uint8_t i2c_address, TwoWire *wire, int32_t sensor_id
 bool analogFrontEnd::_init(int32_t sensor_id) {
     Adafruit_BusIO_Register chip_id = Adafruit_BusIO_Register(i2c_dev, MY_NAME_IS);
     
-    if (chip_id.read() & 0xFC != MY_NAME_IS << 7) {
-    return false;
-  }
-    Serial.println("data read");
+    uint8_t data[2];
+    chip_id.read((uint8_t*)data, 2);
+    Serial.print("data read=  ");
+    Serial.print(data[0]);
+    Serial.print(" / ");
+    Serial.print(data[1]);
+    Serial.println(data[0]<<8 | (data[1] & 0xff));
+    
+    
+    
 
-    powerState(true);
     return true;
 }
 
-void analogFrontEnd::powerState(bool power){
+void analogFrontEnd::powerState(bool power) {
     bool _power = power;
     if(_power == true) {
         
-        writeRegister(SAMPLE_CLK, 0x12 | 0x0>>6 | 0x01>>7 |0x0>>8 & 0xFF);
+        uint16_t data =  readRegister(SAMPLE_CLK);
+        Serial.println(data);
 
     }
+    else{}
 }
 
-void analogFrontEnd::writeRegister(byte addr, byte data) {
-    Adafruit_BusIO_Register reg = Adafruit_BusIO_Register(i2c_dev, addr);
-    reg.write(data);
+uint16_t analogFrontEnd::readRegister(uint8_t addr) {
+
+     Adafruit_BusIO_Register reg = Adafruit_BusIO_Register(i2c_dev, addr);
+     
+     uint16_t data = reg.read();
+     uint16_t data_1 = reg.read();
+     
+     return data;
 }
+
+    
+
+
+
 
