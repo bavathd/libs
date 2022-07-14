@@ -145,18 +145,34 @@ private:
 public:
     analogFrontEnd();
     ~analogFrontEnd();
+
+
     bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &Wire, 
             int32_t Sensor_id = 0);
-    
+
+
     analogFrontEnd_device_state deviceState();
 
-    void powerState(bool power);
+
+    uint8_t* readRegister(uint8_t addr);
+
+
+    void setBitPosition(uint8_t addr, uint8_t bitPosition);
+
+
+    void resetBitPosition(uint8_t addr, uint8_t bitPosition);
+
+
+    //void writeRegister(uint8_t addr, uint8_t* buff, uint8_t const len );
+
+
+    bool isRegisterSet(uint8_t addr, uint8_t bitPosition);
+
+
+    bool isRegisterReset(uint8_t addr, uint8_t bitPosition);
+
     
-
-
-
-
+    void powerState(bool power);
 };
-
 
 #endif
