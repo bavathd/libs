@@ -138,41 +138,36 @@ protected:
     Adafruit_I2CDevice *i2c_dev = NULL;
     
 private:
-    void writeRegister(byte addr, byte data);
+    void writeRegister(uint8_t addr, uint8_t* byte16);
+    void setBitPosition(uint8_t addr, uint8_t bitPosition);
+    void resetBitPosition(uint8_t addr, uint8_t bitPosition);
+    bool isRegisterSet(uint8_t addr, uint8_t bitPosition) ;
+    bool isRegisterReset(uint8_t addr, uint8_t bitPosition) ;
+    uint8_t* readRegister(uint8_t addr);
   /* 
   condition
   */
 public:
     analogFrontEnd();
     ~analogFrontEnd();
-
-
     bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &Wire, 
             int32_t Sensor_id = 0);
-
-
+    
     analogFrontEnd_device_state deviceState();
 
-
-    uint8_t* readRegister(uint8_t addr);
-
-
-    void setBitPosition(uint8_t addr, uint8_t bitPosition);
-
-
-    void resetBitPosition(uint8_t addr, uint8_t bitPosition);
-
-
-    //void writeRegister(uint8_t addr, uint8_t* buff, uint8_t const len );
-
-
-    bool isRegisterSet(uint8_t addr, uint8_t bitPosition);
-
-
-    bool isRegisterReset(uint8_t addr, uint8_t bitPosition);
-
-    
     void powerState(bool power);
+    void SoftReset();
+    void  modeSelection(uint8_t mode);
+    uint16_t readData();
+    void terminateData();
+
+ 
+    
+
+
+
+
 };
+
 
 #endif

@@ -37,7 +37,7 @@ bool analogFrontEnd::_init(int32_t sensor_id) {
         return true;
     }
     else {
-        powerState(true);
+        powerState(false);
         return false;
         
     }
@@ -72,6 +72,61 @@ void analogFrontEnd::powerState(bool power) {
     else{}
 }
 
+void analogFrontEnd::modeSelection(uint8_t mode) {
+        resetBitPosition(MODE, 0);
+        resetBitPosition(MODE, 1);
+      switch(mode) {
+        case 0:
+            if(!isRegisterReset(SAMPLE_CLK, 7)){ 
+            resetBitPosition(SAMPLE_CLK, 7);
+            }
+            resetBitPosition(MODE, 0);
+            resetBitPosition(MODE, 1);
+            break;
+        case 1:
+            setBitPosition(SAMPLE_CLK, 7);
+            setBitPosition(MODE, 0);
+            break;
+
+        case 2:
+           
+            setBitPosition(MODE, 1);
+            break;
+
+            
+
+      }
+}
+
+uint16_t analogFrontEnd::readData() {
+    uint8_t* buff = readRegister(INT_STATUS);
+    String data = String(buff[0])  + " , " + String(buff[1]);
+    Serial.println(data);
+
+}
+
+void analogFrontEnd::terminateData() {
+    modeSelection(1);
+    uint8_t clear[] = {0x00, 0xFF};
+    writeRegister(INT_STATUS, clear);
+    uint8_t clear1[] = {0x80, 0xFF};
+    writeRegister(INT_STATUS, clear1);
+    modeSelection(0);
+
+}
+
+void analogFrontEnd::SoftReset() {   
+    setBitPosition(SW_RESET,0);
+}
+
+
+/*   I2C settings */
+void analogFrontEnd::writeRegister(uint8_t addr, uint8_t* byte16) {
+    Adafruit_BusIO_Register reg = Adafruit_BusIO_Register(i2c_dev, addr);
+    reg.write(byte16, 2);
+
+
+}
 uint8_t* analogFrontEnd::readRegister(uint8_t addr) {
     
     Adafruit_BusIO_Register reg = Adafruit_BusIO_Register(i2c_dev, addr);
@@ -79,6 +134,7 @@ uint8_t* analogFrontEnd::readRegister(uint8_t addr) {
     static uint8_t _buff[2];
     reg.read(_buff, 2);
     return _buff;    
+
 }
 
 // void analogFrontEnd::writeRegister(uint8_t addr, uint8_t buff, uint8_t const len ) {
@@ -140,7 +196,7 @@ bool analogFrontEnd::isRegisterSet(uint8_t addr, uint8_t bitPosition)
     else {
         
         uint8_t mask = 1 << bitPosition;
-        if((value & mask) != 0)
+        if((data[1] & mask) != 0)
                 return true;
         else
                 return false;
