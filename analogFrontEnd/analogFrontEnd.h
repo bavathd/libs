@@ -138,6 +138,8 @@ protected:
     Adafruit_I2CDevice *i2c_dev = NULL;
     
 private:
+
+
     void writeRegister(uint8_t addr, uint8_t* byte16);
     void setBitPosition(uint8_t addr, uint8_t bitPosition);
     void resetBitPosition(uint8_t addr, uint8_t bitPosition);
@@ -150,16 +152,27 @@ private:
 public:
     analogFrontEnd();
     ~analogFrontEnd();
+
+    typedef struct {
+    uint8_t addr;
+    uint8_t value_1;
+    uint8_t value_2;
+}ADI_DCFG_t;
+
+
     bool begin(uint8_t i2c_addr = SLAVE_ADDRESS, TwoWire *wire = &Wire, 
             int32_t Sensor_id = 0);
     
     analogFrontEnd_device_state deviceState();
 
-    void powerState(bool power);
+    //void powerState(bool power);
     void SoftReset();
     void  modeSelection(uint8_t mode);
-    uint16_t readData();
+    void readData(void);
     void terminateData();
+    int16_t readRegisterLong(uint8_t addr, uint8_t* data, uint8_t size);
+    uint8_t* readFIFO( uint8_t nDataSetSize);
+    uint8_t load_DCfg(ADI_DCFG_t *pnCfg);
 
  
     
